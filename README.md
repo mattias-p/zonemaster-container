@@ -16,7 +16,7 @@ To use the docker-compose, execute the following commands inside this Git reposi
 
 The Zonemaster GUI can be accessed on port 8080, while the RPC API is available
 on port 5000 if you prefer to use it directly. Note that the API is also
-available on 8080 using the `/api` route, e.g. `http://localhost:8080/api`
+available on port 8080 using the `/api` route, e.g. `http://localhost:8080/api`
 
 #### Configuration
 

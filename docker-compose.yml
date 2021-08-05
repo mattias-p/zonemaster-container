@@ -34,6 +34,8 @@ services:
   zonemaster-gui:
     build: ./gui
     image: zonemaster-gui
+    environment:
+      ZONEMASTER_API_ENDPOINT: http://zonemaster-api:5000
     volumes:
       - ./gui.conf.d:/config:ro
     ports:

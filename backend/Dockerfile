@@ -3,6 +3,7 @@ FROM centos:8
 EXPOSE 5000
 
 VOLUME /data
+VOLUME /etc/zonemaster
 
 RUN dnf install -y 'dnf-command(config-manager)' && \
     dnf config-manager --set-enabled powertools && \

@@ -4,7 +4,7 @@ services:
     build: ./backend
     image: zonemaster
     volumes:
-      - ./config:/etc/zonemaster:ro
+      - ./backend.conf.d:/etc/zonemaster:ro
     command: bootstrap
     profiles:
       - bootstrap
@@ -16,7 +16,7 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./config:/etc/zonemaster:ro
+      - ./backend.conf.d:/etc/zonemaster:ro
     command: api
     depends_on:
       - postgres
@@ -24,17 +24,26 @@ services:
     build: ./backend
     image: zonemaster
     volumes:
-      - ./config:/etc/zonemaster:ro
+      - ./backend.conf.d:/etc/zonemaster:ro
     command: agent
     depends_on:
       - postgres
     deploy:
       mode: replicated
       replicas: 1
+  zonemaster-gui:
+    build: ./gui
+    image: zonemaster-gui
+    volumes:
+      - ./gui.conf.d:/config:ro
+    ports:
+      - "8080:80"
+    depends_on:
+      - zonemaster-api
   postgres:
     image: postgres:12
     command: postgres -c shared_buffers=256MB -c max_connections=300
     environment:
         POSTGRES_USER: zonemaster
-        POSTGRES_PASSWORD:  zonemaster
+        POSTGRES_PASSWORD: zonemaster
         POSTGRES_DB: zonemaster

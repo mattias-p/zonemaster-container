@@ -58,7 +58,7 @@ Running an agent
 Running the GUI
 
 ```sh
-% docker run -v $PWD/gui.conf.d:/config:ro -e ZONEMASTER_API_ENDPOINT=http://example.com:5000 zonemaster-gui
+% docker run -v $PWD/gui.conf.d:/config:ro -e ZONEMASTER_API_ENDPOINT=http://example.com:5000 -p 8080:80 zonemaster-gui
 ```
 
 ## Troubleshouting

@@ -1,8 +1,12 @@
 #!/bin/bash
+set -xe
 
-function run_agent_daemon {
-    echo "Starting agent in daemon mode"
-    zonemaster_backend_testagent --logfile=- start
+function wait_for_db {
+    db_info=$(perl /scripts/get_db_info.pl)
+    if [ -n "$db_info" ]; then
+        echo "Waiting for database to be up"
+        /scripts/wait-for $db_info
+    fi
 }
 
 function run_agent_standalone {
@@ -20,17 +24,16 @@ function bootstrap_db {
 }
 
 case "$1" in
-    "all")
-        run_agent_daemon
-        run_api
-        ;;
     "api")
+        wait_for_db
         run_api
         ;;
     "agent")
+        wait_for_db
         run_agent_standalone
         ;;
     "bootstrap")
+        wait_for_db
         bootstrap_db
         ;;
     *)

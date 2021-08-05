@@ -1,5 +1,7 @@
 FROM centos:8
 
+EXPOSE 5000
+
 VOLUME /data
 
 RUN dnf install -y 'dnf-command(config-manager)' && \
@@ -11,7 +13,9 @@ RUN dnf install -y 'dnf-command(config-manager)' && \
                     # Backend dependencies
                     jq perl-Class-Method-Modifiers perl-Config-IniFiles perl-DBD-SQLite perl-DBI perl-HTML-Parser perl-JSON-RPC perl-libwww-perl perl-Log-Dispatch perl-Net-Server perl-Parallel-ForkManager perl-Plack perl-Plack-Test perl-Role-Tiny perl-Router-Simple perl-String-ShellQuote perl-Test-NoWarnings perl-Test-Warn perl-Try-Tiny redhat-lsb-core \
                     # DB
-                    perl-DBD-Pg perl-DBD-mysql && \
+                    perl-DBD-Pg perl-DBD-mysql \
+                    # wait-for
+                    netcat && \
     cpanm -n Daemon::Control JSON::Validator Log::Any Log::Any::Adapter::Dispatch Starman \
              Locale::Msgfmt Module::Install Module::Install::XSUtil MooseX::Singleton Test::More && \
     localedef -c -i da_DK -f UTF-8 da_DK.UTF-8 && \
@@ -22,14 +26,15 @@ RUN dnf install -y 'dnf-command(config-manager)' && \
     useradd -r -c "Zonemaster daemon user" -U zonemaster && \
     mkdir /scripts
 
-COPY /scripts/* /scripts
+RUN cpanm -n Zonemaster::LDNS Zonemaster::Engine Zonemaster::Backend
+
+COPY /scripts/* /scripts/
 
 # TODO: Change this to the single script coming in next version
-RUN curl -L https://raw.githubusercontent.com/zonemaster/zonemaster-backend/master/script/create_db_postgresql_9.3.pl -o /scripts/create_db_postgresql.pl
+RUN curl -L https://raw.githubusercontent.com/zonemaster/zonemaster-backend/master/script/create_db_postgresql_9.3.pl -o /scripts/create_db_postgresql.pl && \
+    curl -L https://github.com/eficode/wait-for/releases/download/v2.1.3/wait-for -o /scripts/wait-for
 
 RUN chmod +x /scripts/*
-
-RUN cpanm -n Zonemaster::LDNS Zonemaster::Engine Zonemaster::Backend
 
 USER zonemaster:zonemaster
 

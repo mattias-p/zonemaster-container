@@ -5,6 +5,8 @@
 ## Usage
 
 ### Docker Compose
+
+#### GUI and API
 To use the docker-compose, execute the following commands inside this Git repository.
 
 ```sh
@@ -17,6 +19,13 @@ To use the docker-compose, execute the following commands inside this Git reposi
 The Zonemaster GUI can be accessed on port 8080, while the RPC API is available
 on port 5000 if you prefer to use it directly. Note that the API is also
 available on port 8080 using the `/api` route, e.g. `http://localhost:8080/api`
+
+#### CLI
+
+To run the cli from the docker-compose use,
+```sh
+% docker-compose run --rm zonemaster-cli --help
+```
 
 #### Configuration
 
@@ -32,27 +41,40 @@ The GUI configuration is available at `gui.conf.d/app.config.json`.
 ### Using the images
 
 Building the images
+
 ```sh
-% docker build -t zonemaster ./backend
+% docker build -t zonemaster-backend ./backend
 % docker build -t zonemaster-gui ./gui
+% docker build -t zonemaster-cli ./cli
 ```
 
-Setting up the database
+Running the CLI
 
 ```sh
-% docker run -v $PWD/backend.conf.d:/etc/zonemaster:ro zonemaster bootstrap
+% docker run --rm zonemaster-cli example.com
+```
+To easily call the cli you can create an alias for this command,
+
+```bash
+alias zonemaster-cli='docker run --rm zonemaster-cli'
+```
+
+Setting up the database for the backend
+
+```sh
+% docker run -v $PWD/backend.conf.d:/etc/zonemaster:ro zonemaster-backend bootstrap
 ```
 
 Running the API
 
 ```sh
-% docker run -v $PWD/backend.conf.d:/etc/zonemaster:ro -p 5000:5000 zonemaster api
+% docker run -v $PWD/backend.conf.d:/etc/zonemaster:ro -p 5000:5000 zonemaster-backend api
 ```
 
 Running an agent
 
 ```sh
-% docker run -v $PWD/backend.conf.d:/etc/zonemaster:ro zonemaster agent
+% docker run -v $PWD/backend.conf.d:/etc/zonemaster:ro zonemaster-backend agent
 ```
 
 Running the GUI
@@ -60,6 +82,7 @@ Running the GUI
 ```sh
 % docker run -v $PWD/gui.conf.d:/config:ro -e ZONEMASTER_API_ENDPOINT=http://example.com:5000 -p 8080:80 zonemaster-gui
 ```
+
 
 ## Troubleshouting
 

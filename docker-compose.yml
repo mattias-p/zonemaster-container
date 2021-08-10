@@ -2,7 +2,7 @@ version: "3.9"
 services:
   bootstrap:
     build: ./backend
-    image: zonemaster
+    image: zonemaster-bakend
     volumes:
       - ./backend.conf.d:/etc/zonemaster:ro
     command: bootstrap
@@ -10,9 +10,10 @@ services:
       - bootstrap
     depends_on:
       - postgres
+
   zonemaster-api:
     build: ./backend
-    image: zonemaster
+    image: zonemaster-bakend
     ports:
       - "5000:5000"
     volumes:
@@ -20,9 +21,10 @@ services:
     command: api
     depends_on:
       - postgres
+
   zonemaster-agent:
     build: ./backend
-    image: zonemaster
+    image: zonemaster-bakend
     volumes:
       - ./backend.conf.d:/etc/zonemaster:ro
     command: agent
@@ -31,6 +33,7 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+
   zonemaster-gui:
     build: ./gui
     image: zonemaster-gui
@@ -42,6 +45,13 @@ services:
       - "8080:80"
     depends_on:
       - zonemaster-api
+
+  zonemaster-cli:
+    build: ./cli
+    image: zonemaster-cli
+    profiles:
+      - cli
+
   postgres:
     image: postgres:12
     command: postgres -c shared_buffers=256MB -c max_connections=300

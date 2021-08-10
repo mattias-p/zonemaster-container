@@ -56,7 +56,8 @@ Running the CLI
 To easily call the cli you can create an alias for this command,
 
 ```bash
-alias zonemaster-cli='docker run --rm zonemaster-cli'
+% alias zonemaster-cli='docker run --rm zonemaster-cli'
+% zonemaster-cli example.com
 ```
 
 Setting up the database for the backend

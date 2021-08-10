@@ -50,12 +50,10 @@ Building the images
 
 Running the CLI
 
-```sh
-% docker run --rm zonemaster-cli example.com
-```
-To easily call the cli you can create an alias for this command,
-
 ```bash
+% docker run --rm zonemaster-cli example.com
+
+# Or using an alias
 % alias zonemaster-cli='docker run --rm zonemaster-cli'
 % zonemaster-cli example.com
 ```

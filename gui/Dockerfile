@@ -1,9 +1,11 @@
 FROM node:14 AS build
 
+ARG ref=develop
+
 # Allow customization
-RUN git clone https://github.com/blacksponge/zonemaster-gui.git /app && \
+RUN git clone https://github.com/zonemaster/zonemaster-gui.git /app && \
     cd /app && \
-    git checkout add-runtime-config && \
+    git checkout $ref && \
     npm i && \
     npm run build
 

@@ -1,12 +1,5 @@
 FROM debian:11-slim
 
-EXPOSE 5000
-
-VOLUME /data
-VOLUME /etc/zonemaster
-
-RUN useradd -r -c "Zonemaster user" -U zonemaster
-
 RUN apt-get update && \
     apt-get upgrade -y && \
     # Engine
@@ -22,8 +15,7 @@ RUN apt-get update && \
     apt-get autoremove -y --purge cpanminus build-essential automake autoconf libtool m4 libssl-dev && \
     rm -rf /var/lib/apt/lists/*
 
-
-USER zonemaster:zonemaster
+USER nobody:nogroup
 
 ENTRYPOINT [ "zonemaster-cli" ]
 

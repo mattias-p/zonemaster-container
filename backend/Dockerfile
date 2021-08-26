@@ -1,5 +1,7 @@
 FROM debian:11-slim
 
+COPY ./scripts /scripts
+
 EXPOSE 5000
 
 VOLUME /data
@@ -14,7 +16,7 @@ RUN apt-get update && \
     # Backend
     jq libclass-method-modifiers-perl libconfig-inifiles-perl libdbd-sqlite3-perl libdbi-perl libfile-sharedir-perl libfile-slurp-perl libhtml-parser-perl libio-stringy-perl libjson-pp-perl libjson-rpc-perl liblog-any-adapter-dispatch-perl liblog-any-perl liblog-dispatch-perl libmoose-perl libparallel-forkmanager-perl libplack-perl libplack-middleware-debug-perl librole-tiny-perl librouter-simple-perl libstring-shellquote-perl libtest-nowarnings-perl libtry-tiny-perl starman libdaemon-control-perl libjson-validator-perl \
     # DB
-    libdbd-mysql-perl libdbd-pg-perl \
+    libdbd-pg-perl \
     # wait-for
     netcat \
     # Build deps
@@ -22,8 +24,6 @@ RUN apt-get update && \
     # Update locales
     perl -pi -e 's/^# (da_DK\.UTF-8.*|en_US\.UTF-8.*|fi_FI\.UTF-8.*|fr_FR\.UTF-8.*|nb_NO\.UTF-8.*|sv_SE\.UTF-8.*)/$1/' /etc/locale.gen && \
     locale-gen && \
-    # Create scripts dir
-    mkdir /scripts && \
     # Install zonemaster components
     cpanm -n Zonemaster::LDNS Zonemaster::Engine Zonemaster::Backend && \
     # TODO: Change this to the single script coming in next version
@@ -33,9 +33,7 @@ RUN apt-get update && \
     apt-get autoremove -y --purge cpanminus build-essential automake autoconf libtool m4 libssl-dev curl && \
     rm -rf /var/lib/apt/lists/*
 
-COPY /scripts/* /scripts/
-
-RUN chmod +x /scripts/*
+RUN chmod +x /scripts/wait-for
 
 USER zonemaster:zonemaster
 

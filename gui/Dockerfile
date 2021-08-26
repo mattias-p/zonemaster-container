@@ -2,8 +2,10 @@ FROM node:14 AS build
 
 ARG ref=develop
 
-# Allow customization
-RUN git clone https://github.com/zonemaster/zonemaster-gui.git /app && \
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    rm -rf /var/lib/apt/lists/* && \
+    git clone https://github.com/zonemaster/zonemaster-gui.git /app && \
     cd /app && \
     git checkout $ref && \
     npm i && \

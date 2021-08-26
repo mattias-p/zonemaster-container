@@ -8,6 +8,7 @@ VOLUME /etc/zonemaster
 RUN useradd -r -c "Zonemaster user" -U zonemaster
 
 RUN apt-get update && \
+    apt-get upgrade -y && \
     # Engine
     apt-get install -y locales autoconf automake build-essential cpanminus libclone-perl libdevel-checklib-perl libemail-valid-perl libfile-sharedir-perl libfile-slurp-perl libidn11-dev libintl-perl libio-socket-inet6-perl libjson-pp-perl liblist-moreutils-perl liblocale-msgfmt-perl libmodule-find-perl libmodule-install-perl libmodule-install-xsutil-perl libmoose-perl libmoosex-singleton-perl libnet-ip-perl libpod-coverage-perl libreadonly-xs-perl libssl-dev libtest-differences-perl libtest-exception-perl libtest-fatal-perl libtest-pod-perl libtext-csv-perl libtool m4 \
     # Cli

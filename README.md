@@ -64,10 +64,10 @@ Setting up the database for the backend
 % docker run -v $PWD/backend.conf.d:/etc/zonemaster:ro zonemaster-backend bootstrap
 ```
 
-Running the API
+Running the RPCAPI
 
 ```sh
-% docker run -v $PWD/backend.conf.d:/etc/zonemaster:ro -p 5000:5000 zonemaster-backend api
+% docker run -v $PWD/backend.conf.d:/etc/zonemaster:ro -p 5000:5000 zonemaster-backend rpcapi
 ```
 
 Running an agent

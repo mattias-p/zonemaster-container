@@ -11,14 +11,14 @@ services:
     depends_on:
       - postgres
 
-  zonemaster-api:
+  zonemaster-rpcapi:
     build: ./backend
     image: zonemaster-backend
     ports:
       - "5000:5000"
     volumes:
       - ./backend.conf.d:/etc/zonemaster:ro
-    command: api
+    command: rpcapi
     depends_on:
       - postgres
 
@@ -38,13 +38,13 @@ services:
     build: ./gui
     image: zonemaster-gui
     environment:
-      ZONEMASTER_API_ENDPOINT: http://zonemaster-api:5000
+      ZONEMASTER_API_ENDPOINT: http://zonemaster-rpcapi:5000
     volumes:
       - ./gui.conf.d:/config:ro
     ports:
       - "8080:80"
     depends_on:
-      - zonemaster-api
+      - zonemaster-rpcapi
 
   zonemaster-cli:
     build: ./cli

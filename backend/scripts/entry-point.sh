@@ -14,7 +14,7 @@ function run_agent_standalone {
     zonemaster_backend_testagent --logfile=- foreground
 }
 
-function run_api {
+function run_rpcapi {
     echo "Starting RPCAPI"
     starman --preload-app /usr/local/bin/zonemaster_backend_rpcapi.psgi
 }
@@ -24,9 +24,9 @@ function bootstrap_db {
 }
 
 case "$1" in
-    "api")
+    "rpcapi")
         wait_for_db
-        run_api
+        run_rpcapi
         ;;
     "agent")
         wait_for_db

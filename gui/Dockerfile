@@ -11,7 +11,7 @@ RUN apt-get update && \
     npm i && \
     npm run build
 
-FROM nginx
+FROM nginx:alpine
 
 VOLUME /config
 

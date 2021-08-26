@@ -53,7 +53,7 @@ services:
       - cli
 
   postgres:
-    image: postgres:12
+    image: postgres:12-alpine
     command: postgres -c shared_buffers=256MB -c max_connections=300
     environment:
         POSTGRES_USER: zonemaster

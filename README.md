@@ -51,10 +51,10 @@ Building the images
 Running the CLI
 
 ```bash
-% docker run --rm zonemaster-cli example.com
+% docker run --rm --read-only zonemaster-cli example.com
 
 # Or using an alias
-% alias zonemaster-cli='docker run --rm zonemaster-cli'
+% alias zonemaster-cli='docker run --rm --read-only zonemaster-cli'
 % zonemaster-cli example.com
 ```
 

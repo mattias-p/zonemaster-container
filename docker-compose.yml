@@ -21,6 +21,7 @@ services:
     command: rpcapi
     depends_on:
       - postgres
+    read_only: true
 
   zonemaster-agent:
     build: ./backend
@@ -33,6 +34,9 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+    read_only: true
+    tmpfs:
+      - /tmp
 
   zonemaster-gui:
     build: ./gui
@@ -45,12 +49,18 @@ services:
       - "8080:80"
     depends_on:
       - zonemaster-rpcapi
+    read_only: true
+    tmpfs:
+      - /etc/nginx/conf.d
+      - /var/cache/nginx
+      - /var/run
 
   zonemaster-cli:
     build: ./cli
     image: zonemaster-cli
     profiles:
       - cli
+    read_only: true
 
   postgres:
     image: postgres:12-alpine
@@ -59,3 +69,6 @@ services:
         POSTGRES_USER: zonemaster
         POSTGRES_PASSWORD: zonemaster
         POSTGRES_DB: zonemaster
+    read_only: true
+    tmpfs:
+      - /var/run/postgresql

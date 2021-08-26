@@ -2,7 +2,7 @@ version: "3.9"
 services:
   bootstrap:
     build: ./backend
-    image: zonemaster-bakend
+    image: zonemaster-backend
     volumes:
       - ./backend.conf.d:/etc/zonemaster:ro
     command: bootstrap
@@ -13,7 +13,7 @@ services:
 
   zonemaster-api:
     build: ./backend
-    image: zonemaster-bakend
+    image: zonemaster-backend
     ports:
       - "5000:5000"
     volumes:
@@ -24,7 +24,7 @@ services:
 
   zonemaster-agent:
     build: ./backend
-    image: zonemaster-bakend
+    image: zonemaster-backend
     volumes:
       - ./backend.conf.d:/etc/zonemaster:ro
     command: agent

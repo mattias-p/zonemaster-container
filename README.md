@@ -51,10 +51,10 @@ Building the images
 Running the CLI
 
 ```bash
-% docker run --rm --read-only --security-opt=no-new-privileges zonemaster-cli example.com
+% docker run --rm --read-only --security-opt=no-new-privileges --cap-drop=ALL zonemaster-cli example.com
 
 # Or using an alias
-% alias zonemaster-cli='docker run --rm --read-only --security-opt=no-new-privileges zonemaster-cli'
+% alias zonemaster-cli='docker run --rm --read-only --security-opt=no-new-privileges --cap-drop=ALL zonemaster-cli'
 % zonemaster-cli example.com
 ```
 

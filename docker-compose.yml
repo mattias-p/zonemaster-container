@@ -24,6 +24,8 @@ services:
     read_only: true
     security_opt:
       - "no-new-privileges:true"
+    cap_drop:
+      - ALL
 
   zonemaster-agent:
     build: ./backend
@@ -41,6 +43,8 @@ services:
       - /tmp
     security_opt:
       - "no-new-privileges:true"
+    cap_drop:
+      - ALL
 
   zonemaster-gui:
     build: ./gui
@@ -60,6 +64,13 @@ services:
       - /var/run
     security_opt:
       - "no-new-privileges:true"
+    cap_drop:
+      - ALL
+    cap_add:
+      - CAP_CHOWN
+      - CAP_NET_ADMIN
+      - CAP_SETGID
+      - CAP_SETUID
 
   zonemaster-cli:
     build: ./cli
@@ -69,6 +80,8 @@ services:
     read_only: true
     security_opt:
       - "no-new-privileges:true"
+    cap_drop:
+      - ALL
 
   postgres:
     image: postgres:12-alpine
@@ -82,3 +95,10 @@ services:
       - /var/run/postgresql
     security_opt:
       - "no-new-privileges:true"
+    cap_drop:
+      - ALL
+    cap_add:
+      - CAP_CHOWN
+      - CAP_DAC_OVERRIDE
+      - CAP_SETGID
+      - CAP_SETUID

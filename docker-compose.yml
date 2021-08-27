@@ -22,6 +22,8 @@ services:
     depends_on:
       - postgres
     read_only: true
+    security_opt:
+      - "no-new-privileges:true"
 
   zonemaster-agent:
     build: ./backend
@@ -37,6 +39,8 @@ services:
     read_only: true
     tmpfs:
       - /tmp
+    security_opt:
+      - "no-new-privileges:true"
 
   zonemaster-gui:
     build: ./gui
@@ -54,6 +58,8 @@ services:
       - /etc/nginx/conf.d
       - /var/cache/nginx
       - /var/run
+    security_opt:
+      - "no-new-privileges:true"
 
   zonemaster-cli:
     build: ./cli
@@ -61,6 +67,8 @@ services:
     profiles:
       - cli
     read_only: true
+    security_opt:
+      - "no-new-privileges:true"
 
   postgres:
     image: postgres:12-alpine
@@ -72,3 +80,5 @@ services:
     read_only: true
     tmpfs:
       - /var/run/postgresql
+    security_opt:
+      - "no-new-privileges:true"

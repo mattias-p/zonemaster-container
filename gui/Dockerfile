@@ -13,11 +13,11 @@ RUN apt-get update && \
 
 FROM nginx:alpine
 
-VOLUME /config
-
 COPY --from=build /app/dist/ /usr/share/nginx/html/
 COPY ./config/zonemaster.conf.template /etc/nginx/templates/zonemaster.conf.template
 
 RUN rm /usr/share/nginx/html/assets/app.config.json && \
     rm /etc/nginx/conf.d/* && \
     ln -s /config/app.config.json /usr/share/nginx/html/assets/app.config.json
+
+VOLUME /config

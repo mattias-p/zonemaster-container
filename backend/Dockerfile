@@ -1,14 +1,5 @@
 FROM debian:11-slim
 
-COPY ./scripts /scripts
-
-EXPOSE 5000
-
-VOLUME /data
-VOLUME /etc/zonemaster
-
-RUN useradd -r -c "Zonemaster user" -U zonemaster
-
 RUN apt-get update && \
     apt-get upgrade -y && \
     # Engine
@@ -21,19 +12,28 @@ RUN apt-get update && \
     netcat \
     # Build deps
     curl && \
+    # Clean up
+    apt-get autoremove -y --purge cpanminus build-essential automake autoconf libtool m4 libssl-dev curl && \
+    rm -rf /var/lib/apt/lists/* && \
+    # Install zonemaster components
+    cpanm -n Zonemaster::LDNS Zonemaster::Engine Zonemaster::Backend
+
+COPY ./scripts /scripts
+
+# TODO: Change this to the single script coming in next version
+RUN curl -L https://raw.githubusercontent.com/zonemaster/zonemaster-backend/master/script/create_db_postgresql_9.3.pl -o /scripts/create_db_postgresql.pl && \
+    curl -L https://github.com/eficode/wait-for/releases/download/v2.1.3/wait-for -o /scripts/wait-for && \
+    chmod +x /scripts/wait-for && \
     # Update locales
     perl -pi -e 's/^# (da_DK\.UTF-8.*|en_US\.UTF-8.*|fi_FI\.UTF-8.*|fr_FR\.UTF-8.*|nb_NO\.UTF-8.*|sv_SE\.UTF-8.*)/$1/' /etc/locale.gen && \
     locale-gen && \
-    # Install zonemaster components
-    cpanm -n Zonemaster::LDNS Zonemaster::Engine Zonemaster::Backend && \
-    # TODO: Change this to the single script coming in next version
-    curl -L https://raw.githubusercontent.com/zonemaster/zonemaster-backend/master/script/create_db_postgresql_9.3.pl -o /scripts/create_db_postgresql.pl && \
-    curl -L https://github.com/eficode/wait-for/releases/download/v2.1.3/wait-for -o /scripts/wait-for && \
-    # Clean up
-    apt-get autoremove -y --purge cpanminus build-essential automake autoconf libtool m4 libssl-dev curl && \
-    rm -rf /var/lib/apt/lists/*
+    # Daemon user
+    useradd -r -c "Zonemaster user" -U zonemaster
 
-RUN chmod +x /scripts/wait-for
+EXPOSE 5000
+
+VOLUME /data
+VOLUME /etc/zonemaster
 
 USER zonemaster:zonemaster
 

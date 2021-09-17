@@ -8,15 +8,14 @@ RUN apk add --no-cache \
     perl-dev \
     perl-doc \
     perl-module-install \
- && cpanm --verbose --notest --no-wget \
+ && cpanm --notest --no-wget \
     MooseX::Getopt \
     Text::Reflow \
     Net::Interface
 
 # Install Zonemaster components
 RUN cpanm --verbose --notest --no-wget \
-    Zonemaster::CLI \
- && echo here2
+    Zonemaster::CLI
 
 FROM zonemaster/engine:alpine
 

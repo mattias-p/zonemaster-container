@@ -1,32 +1,28 @@
 FROM localhost:5001/zonemaster/engine as build
 
-RUN apt-get update \
- && apt-get install -y \
-    cpanminus \
-    # Cli
-    libmodule-install-perl \
-    libmoosex-getopt-perl \
-    libnet-interface-perl \
-    libtext-reflow-perl \
-    # Clean up
- && rm -rf /var/lib/apt/lists/* \
-    # Install Zonemaster components
- && cpanm -n \
-    Zonemaster::CLI
+RUN apk add --no-cache \
+    # Compile-time dependencies
+    build-base \
+    make \
+    perl-app-cpanminus \
+    perl-dev \
+    perl-doc \
+    perl-module-install \
+ && cpanm --verbose --notest --no-wget \
+    MooseX::Getopt \
+    Text::Reflow \
+    Net::Interface
+
+# Install Zonemaster components
+RUN cpanm --verbose --notest --no-wget \
+    Zonemaster::CLI \
+ && echo here2
 
 FROM localhost:5001/zonemaster/engine
 
 COPY --from=build /usr/local/bin/zonemaster-cli /usr/local/bin/zonemaster-cli
-
-RUN apt-get update \
- && apt-get install -y \
-    # Cli
-    libmoosex-getopt-perl \
-    libnet-interface-perl \
-    libtext-reflow-perl \
-    # Clean up
- && apt-get autoremove -y \
- && rm -rf /var/lib/apt/lists/*
+COPY --from=build /usr/local/lib/perl5/site_perl /usr/local/lib/perl5/site_perl
+COPY --from=build /usr/local/share/perl5/site_perl /usr/local/share/perl5/site_perl
 
 USER nobody:nogroup
 

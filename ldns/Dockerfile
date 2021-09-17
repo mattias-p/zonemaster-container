@@ -1,37 +1,31 @@
-FROM debian:11-slim as build
+FROM alpine:3.14 as build
 
-RUN apt-get update \
- && apt-get upgrade -y \
- && apt-get install -y \
-    # LDNS
+RUN apk add --no-cache \
+    # Compile-time dependencies
     autoconf \
     automake \
-    build-essential \
-    cpanminus \
-    libdevel-checklib-perl \
-    libidn11-dev \
-    libmodule-install-perl \
-    libmodule-install-xsutil-perl \
-    libssl-dev \
-    libtest-fatal-perl \
+    build-base \
+    perl-dev \
+    libidn-dev \
     libtool \
-    m4 \
-    # Clean up
- && rm -rf /var/lib/apt/lists/* \
-    # Install Zonemaster components
- && cpanm -n \
+    make \
+    openssl-dev \
+    perl-app-cpanminus \
+    perl-devel-checklib \
+    perl-module-install \
+    perl-test-fatal \
+ && cpanm --notest --no-wget \
+    Module::Install::XSUtil
+
+RUN cpanm --notest --no-wget \
+    # Zonemaster components
     Zonemaster::LDNS
 
-FROM debian:11-slim
+FROM alpine:3.14
 
-COPY --from=build /usr/local/lib/x86_64-linux-gnu/perl /usr/local/lib/x86_64-linux-gnu/perl
-COPY --from=build /usr/local/share/perl /usr/local/share/perl
+COPY --from=build /usr/local/lib/perl5/site_perl/auto/Zonemaster /usr/local/lib/perl5/site_perl/auto/Zonemaster
+COPY --from=build /usr/local/lib/perl5/site_perl/Zonemaster /usr/local/lib/perl5/site_perl/Zonemaster
 
-RUN apt-get update \
- && apt-get upgrade -y \
- && apt-get install -y \
-    # LDNS
-    libidn11 \
-    # Clean up
- && apt-get autoremove -y \
- && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache \
+    # Run-time dependencies
+    libidn

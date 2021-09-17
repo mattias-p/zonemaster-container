@@ -1,4 +1,4 @@
-FROM localhost:5001/zonemaster/engine as build
+FROM zonemaster/engine:alpine as build
 
 RUN apk add --no-cache \
     # Compile-time dependencies
@@ -18,7 +18,7 @@ RUN cpanm --verbose --notest --no-wget \
     Zonemaster::CLI \
  && echo here2
 
-FROM localhost:5001/zonemaster/engine
+FROM zonemaster/engine:alpine
 
 COPY --from=build /usr/local/bin/zonemaster-cli /usr/local/bin/zonemaster-cli
 COPY --from=build /usr/local/lib/perl5/site_perl /usr/local/lib/perl5/site_perl

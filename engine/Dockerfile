@@ -1,4 +1,4 @@
-FROM localhost:5001/zonemaster/ldns as build
+FROM zonemaster/ldns:alpine as build
 
 RUN apk add --no-cache \
     # Compile-time dependencies
@@ -33,7 +33,7 @@ RUN cpanm --notest --no-wget \
     # Install Zonemaster components
     Zonemaster::Engine
 
-FROM localhost:5001/zonemaster/ldns
+FROM zonemaster/ldns:alpine
 
 COPY --from=build /usr/local/lib/perl5/site_perl /usr/local/lib/perl5/site_perl
 

@@ -1,4 +1,4 @@
-FROM zonemaster/ldns:alpine as build
+FROM zonemaster/ldns as build
 
 ARG version
 
@@ -37,7 +37,7 @@ RUN cpanm --notest --no-wget \
     # Install Zonemaster components
     ./Zonemaster-Engine-${version}.tar.gz
 
-FROM zonemaster/ldns:alpine
+FROM zonemaster/ldns
 
 COPY --from=build /usr/local/lib/perl5/site_perl /usr/local/lib/perl5/site_perl
 

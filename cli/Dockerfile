@@ -1,4 +1,4 @@
-FROM zonemaster/engine:alpine as build
+FROM zonemaster/engine as build
 
 ARG version
 
@@ -21,7 +21,7 @@ COPY ./Zonemaster-CLI-${version}.tar.gz ./Zonemaster-CLI-${version}.tar.gz
 RUN cpanm --verbose --notest --no-wget \
     ./Zonemaster-CLI-${version}.tar.gz
 
-FROM zonemaster/engine:alpine
+FROM zonemaster/engine
 
 COPY --from=build /usr/local/bin/zonemaster-cli /usr/local/bin/zonemaster-cli
 COPY --from=build /usr/local/lib/perl5/site_perl /usr/local/lib/perl5/site_perl

@@ -1,5 +1,7 @@
 FROM alpine:3.14 as build
 
+ARG version
+
 RUN apk add --no-cache \
     # Compile-time dependencies
     autoconf \
@@ -17,9 +19,11 @@ RUN apk add --no-cache \
  && cpanm --notest --no-wget \
     Module::Install::XSUtil
 
+COPY ./Zonemaster-LDNS-${version}.tar.gz ./Zonemaster-LDNS-${version}.tar.gz
+
 RUN cpanm --notest --no-wget \
     # Zonemaster components
-    Zonemaster::LDNS
+    ./Zonemaster-LDNS-${version}.tar.gz
 
 FROM alpine:3.14
 

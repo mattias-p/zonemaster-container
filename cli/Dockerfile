@@ -1,5 +1,7 @@
 FROM zonemaster/engine:alpine as build
 
+ARG version
+
 RUN apk add --no-cache \
     # Compile-time dependencies
     build-base \
@@ -13,9 +15,11 @@ RUN apk add --no-cache \
     Text::Reflow \
     Net::Interface
 
+COPY ./Zonemaster-CLI-${version}.tar.gz ./Zonemaster-CLI-${version}.tar.gz
+
 # Install Zonemaster components
 RUN cpanm --verbose --notest --no-wget \
-    Zonemaster::CLI
+    ./Zonemaster-CLI-${version}.tar.gz
 
 FROM zonemaster/engine:alpine
 

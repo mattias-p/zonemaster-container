@@ -3,12 +3,13 @@ FROM zonemaster/ldns as build
 ARG version
 
 RUN apk add --no-cache \
-    # Compile-time dependencies
+    # Only needed for Readonly::XS
     build-base \
     make \
+    perl-dev \
+    # Compile-time dependencies
     perl-app-cpanminus \
     perl-clone \
-    perl-dev \
     perl-file-sharedir \
     perl-file-slurp \
     perl-io-socket-inet6 \
@@ -34,16 +35,17 @@ RUN apk add --no-cache \
 COPY ./Zonemaster-Engine-${version}.tar.gz ./Zonemaster-Engine-${version}.tar.gz
 
 RUN cpanm --notest --no-wget \
-    # Install Zonemaster components
     ./Zonemaster-Engine-${version}.tar.gz
 
 FROM zonemaster/ldns
 
+# Include all the Perl modules we built
 COPY --from=build /usr/local/lib/perl5/site_perl /usr/local/lib/perl5/site_perl
 
 RUN apk add --no-cache \
-    # Run-time dependencies
+    # All the locales we need and more
     musl-locales \
+    # Run-time dependencies
     perl-clone \
     perl-file-sharedir \
     perl-file-slurp \

@@ -4,12 +4,10 @@ ARG version
 
 RUN apk add --no-cache \
     # Compile-time dependencies
-    autoconf \
-    automake \
     build-base \
+    ldns-dev \
     perl-dev \
     libidn-dev \
-    libtool \
     make \
     openssl-dev \
     perl-app-cpanminus \
@@ -21,7 +19,7 @@ RUN apk add --no-cache \
 
 COPY ./Zonemaster-LDNS-${version}.tar.gz ./Zonemaster-LDNS-${version}.tar.gz
 
-RUN cpanm --notest --no-wget \
+RUN cpanm --notest --no-wget --configure-args="--no-internal-ldns" \
     # Zonemaster components
     ./Zonemaster-LDNS-${version}.tar.gz
 
@@ -32,4 +30,5 @@ COPY --from=build /usr/local/lib/perl5/site_perl/Zonemaster /usr/local/lib/perl5
 
 RUN apk add --no-cache \
     # Run-time dependencies
+    ldns \
     libidn
